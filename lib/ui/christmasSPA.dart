@@ -1,3 +1,4 @@
+import 'package:christmasspa/ui/christmas_images.dart';
 import 'package:flutter/material.dart';
 
 class ChristmasSPA extends StatefulWidget {
@@ -15,43 +16,7 @@ class _ChristmasSPAState extends State<ChristmasSPA> {
     return Scaffold(
       backgroundColor: const Color(0xFF281C05),
       body: Stack(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Flexible(
-                flex: 1,
-                child: Container(
-                  width: itemWidth,
-                  child: Image.asset(
-                    'assets/images/candles.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Container(
-                width: itemWidth,
-                child: Image.asset(
-                  'assets/images/film.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Flexible(
-                  flex: 1,
-                  child: Container(
-                    width: itemWidth,
-
-                    child: Image.asset(
-                      'assets/images/girl.png',
-                      fit: BoxFit.cover,
-                    ),
-                    //
-                  )),
-            ],
-          ),
-          AppTitle()
-        ],
+        children: [ChristmasImages(), AppTitle()],
       ),
     );
   }
