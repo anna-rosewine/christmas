@@ -9,19 +9,21 @@ class ChristmasImages extends StatelessWidget {
   Widget build(BuildContext context) {
     double itemWidth = (MediaQuery.of(context).size.width * 0.6) / 3;
     print('here');
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        ...items.map(
-          (item) => ImageItem(
-            title: item.title,
-            imageAsset: item.assetPath,
-            width: itemWidth,
-          ),
-        ),
-      ],
-    );
+    return Container(
+        padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ...items.map(
+              (item) => ImageItem(
+                title: item.title,
+                imageAsset: item.assetPath,
+                width: itemWidth,
+              ),
+            ),
+          ],
+        ));
   }
 }
 
@@ -45,7 +47,9 @@ class _ImageItemState extends State<ImageItem>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late double width;
+
   bool isOpen = false;
+  late Animation _flexAnimation;
   late Animation _titleOpacityAnimation;
   late Animation _widthAnimation;
   late Animation _filterAnimation;
@@ -66,6 +70,7 @@ class _ImageItemState extends State<ImageItem>
             .animate(_controller);
     _titleOpacityAnimation =
         Tween<double>(begin: 1, end: 0).animate(_controller);
+    _flexAnimation = IntTween(begin: 100, end: 200).animate(_controller);
     _controller.addListener(() {});
   }
 
@@ -74,76 +79,78 @@ class _ImageItemState extends State<ImageItem>
     return AnimatedBuilder(
         animation: _controller,
         builder: (BuildContext context, _) {
-          return MouseRegion(
-              onEnter: (_) {
-                _controller.forward();
-                setState(() {
-                  isOpen = true;
-                });
-              },
-              onExit: (_) {
-                _controller.reverse();
-                setState(() {
-                  isOpen = false;
-                });
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 100),
-                height: MediaQuery.of(context).size.height,
-                width: _widthAnimation.value,
-                child: Stack(
-                  children: [
-                    ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                          _filterAnimation.value, BlendMode.modulate),
-                      child: Image.asset(
-                        widget.imageAsset,
-                        colorBlendMode: BlendMode.colorBurn,
-                        filterQuality: FilterQuality.high,
-                        width: _widthAnimation.value,
-                        height: MediaQuery.of(context).size.height,
-                        fit: BoxFit.cover,
-                      ),
+          return Flexible(
+              flex: _flexAnimation.value,
+              child: MouseRegion(
+                  onEnter: (_) {
+                    _controller.forward();
+                    setState(() {
+                      isOpen = true;
+                    });
+                  },
+                  onExit: (_) {
+                    _controller.reverse();
+                    setState(() {
+                      isOpen = false;
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 100),
+                    height: MediaQuery.of(context).size.height,
+                    // width: _widthAnimation.value,
+                    child: Stack(
+                      children: [
+                        ColorFiltered(
+                          colorFilter: ColorFilter.mode(
+                              _filterAnimation.value, BlendMode.modulate),
+                          child: Image.asset(
+                            widget.imageAsset,
+                            colorBlendMode: BlendMode.colorBurn,
+                            filterQuality: FilterQuality.high,
+                            // width: _widthAnimation.value,
+                            height: MediaQuery.of(context).size.height,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Opacity(
+                            opacity: _titleOpacityAnimation.value,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 70, horizontal: 30),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 1,
+                                    color: Colors.white,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.3,
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    widget.title,
+                                    style: TextStyle(color: Colors.white),
+                                  )
+                                ],
+                              ),
+                            )),
+                        Align(
+                            alignment: Alignment.bottomRight,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                              child: Opacity(
+                                opacity: 1.0 - _titleOpacityAnimation.value,
+                                child: CustomBtn(
+                                    link: widget.title, title: widget.title),
+                              ),
+                            ))
+                      ],
                     ),
-                    Opacity(
-                        opacity: _titleOpacityAnimation.value,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 70, horizontal: 30),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 1,
-                                color: Colors.white,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.3,
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                widget.title,
-                                style: TextStyle(color: Colors.white),
-                              )
-                            ],
-                          ),
-                        )),
-                    Align(
-                        alignment: Alignment.bottomRight,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 20),
-                          child: Opacity(
-                            opacity: 1.0 - _titleOpacityAnimation.value,
-                            child: CustomBtn(
-                                link: widget.title, title: widget.title),
-                          ),
-                        ))
-                  ],
-                ),
-              ));
+                  )));
         });
     // ),
   }
