@@ -65,6 +65,7 @@ class _ChristmasSPAState extends State<ChristmasSPA>
                   children: [
                     ChristmasImages(
                       checkOpenItem: null,
+                      openMpbileItem: null,
                       padding: padding,
                       isMobileView: false,
                       mouseIn: rotateToVertical,

@@ -11,8 +11,12 @@ class MobileLayout extends StatefulWidget {
 }
 
 class _MobileLayoutState extends State<MobileLayout> {
+  MoodItem? openItem;
   _checkOpenItem(MoodItem item) {
-    print(item.title);
+    print(item.title + ' ttttttt');
+    setState(() {
+      openItem = item;
+    });
   }
 
   @override
@@ -25,6 +29,7 @@ class _MobileLayoutState extends State<MobileLayout> {
           isMobileView: true,
           mouseIn: () {},
           mouseOut: () {},
+          openMpbileItem: openItem,
         ),
         AppTitle(
           turns: 0,

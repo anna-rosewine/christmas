@@ -8,6 +8,7 @@ class ChristmasImages extends StatelessWidget {
   final double padding;
   final bool isMobileView;
   final Function? checkOpenItem;
+  final MoodItem? openMpbileItem;
   const ChristmasImages({
     Key? key,
     required this.padding,
@@ -15,11 +16,13 @@ class ChristmasImages extends StatelessWidget {
     required this.mouseOut,
     required this.isMobileView,
     required this.checkOpenItem,
+    required this.openMpbileItem,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double itemWidth = (MediaQuery.of(context).size.width * 0.6) / 3;
+    print('build');
     return Container(
         padding:
             EdgeInsets.only(left: padding, top: isMobileView == true ? 350 : 0),
@@ -39,6 +42,7 @@ class ChristmasImages extends StatelessWidget {
                       ...items.map(
                         (item) => ImageItem(
                           checkOpenItem: null,
+                          isMobileOpen: false,
                           isMobileView: false,
                           moodItem: item,
                           width: itemWidth,
@@ -53,6 +57,7 @@ class ChristmasImages extends StatelessWidget {
       children: [
         ...items.map(
           (item) => ImageItem(
+            isMobileOpen: openMpbileItem?.title == item.title ? true : false,
             checkOpenItem: checkOpenItem,
             isMobileView: true,
             moodItem: item,
@@ -66,13 +71,15 @@ class ChristmasImages extends StatelessWidget {
 
 class ImageItem extends StatefulWidget {
   final Function? checkOpenItem;
+  bool isMobileOpen;
 
   ImageItem(
       {Key? key,
       required this.width,
       required this.moodItem,
       required this.isMobileView,
-      required this.checkOpenItem})
+      required this.checkOpenItem,
+      required this.isMobileOpen})
       : super(key: key);
 
   double width;
@@ -112,10 +119,24 @@ class _ImageItemState extends State<ImageItem>
         Tween<double>(begin: 1, end: 0).animate(_controller);
     _flexAnimation = IntTween(begin: 100, end: 200).animate(_controller);
     _controller.addListener(() {});
+    // print(
+    //     'is mob: ${widget.isMobileView}, open:${widget.isMobileOpen}, ${widget.moodItem.title} ');
+    // if (widget.isMobileView == true && widget.isMobileOpen == false) {
+    //   _controller.reverse();
+    //   setState(() {
+    //     isOpen = false;
+    //   });
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isMobileView == true && widget.isMobileOpen == false) {
+      _controller.reverse();
+      // setState(() {
+      //   isOpen = false;
+      // });
+    }
     return AnimatedBuilder(
         animation: _controller,
         builder: (BuildContext context, _) {
