@@ -13,10 +13,13 @@ class MobileLayout extends StatefulWidget {
 class _MobileLayoutState extends State<MobileLayout> {
   MoodItem? openItem;
   _checkOpenItem(MoodItem item) {
-    print(item.title + ' ttttttt');
-    setState(() {
-      openItem = item;
-    });
+    item.title == openItem?.title
+        ? setState(() {
+            openItem = null;
+          })
+        : setState(() {
+            openItem = item;
+          });
   }
 
   @override

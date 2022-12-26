@@ -22,7 +22,6 @@ class ChristmasImages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double itemWidth = (MediaQuery.of(context).size.width * 0.6) / 3;
-    print('build');
     return Container(
         padding:
             EdgeInsets.only(left: padding, top: isMobileView == true ? 350 : 0),
@@ -176,7 +175,7 @@ class _ImageItemState extends State<ImageItem>
     return AnimatedContainer(
       duration: const Duration(milliseconds: 100),
       height: widget.isMobileView == true
-          ? 200
+          ? _flexAnimation.value * 2.5
           : MediaQuery.of(context).size.height,
       // width: MediaQuery.of(context).size.width,
       // width: _widthAnimation.value,
@@ -191,7 +190,7 @@ class _ImageItemState extends State<ImageItem>
               filterQuality: FilterQuality.high,
               width: MediaQuery.of(context).size.width,
               height: widget.isMobileView == true
-                  ? 200
+                  ? _flexAnimation.value * 200
                   : MediaQuery.of(context).size.height,
               fit: BoxFit.cover,
             ),
