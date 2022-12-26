@@ -9,29 +9,48 @@ class ChristmasSPA extends StatefulWidget {
   _ChristmasSPAState createState() => _ChristmasSPAState();
 }
 
-class _ChristmasSPAState extends State<ChristmasSPA> {
+class _ChristmasSPAState extends State<ChristmasSPA>
+    with SingleTickerProviderStateMixin {
   late double padding;
-  double rotation = 0.0;
+  late Animation<double> rotation;
+  late AnimationController _rotateController;
 
   rotateToVertical() {
     print('vert');
-
+    _rotateController.forward();
     setState(() {
       padding = MediaQuery.of(context).size.width * 0.2;
-      rotation = -1.58;
     });
   }
 
   rotateToHorizontal() {
+    _rotateController.reverse();
     setState(() {
       padding = MediaQuery.of(context).size.width * 0.2;
-      rotation = 0.0;
     });
   }
 
   @override
   initState() {
     super.initState();
+
+    _rotateController = AnimationController(
+      vsync: this,
+      duration: const Duration(
+        milliseconds: 400,
+      ),
+    );
+
+    rotation = Tween<double>(
+      begin: 0.0,
+      end: -1.58,
+    ).animate(_rotateController);
+
+    _rotateController.addListener(() {
+      setState(() {});
+    });
+
+    // _rotateController.forward();
   }
 
   @override
@@ -48,7 +67,7 @@ class _ChristmasSPAState extends State<ChristmasSPA> {
             mouseOut: rotateToHorizontal,
           ),
           AppTitle(
-            turns: rotation,
+            turns: rotation.value,
           )
         ],
       ),
