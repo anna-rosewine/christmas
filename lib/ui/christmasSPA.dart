@@ -70,24 +70,27 @@ class AppTitle extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(left: 30),
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 400),
-              // transform: Matrix4.rotationZ(turns),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //  turns == 0 ? 0 : 50
-                  Text('Christmas ',
-                      style: TextStyle(
-                          fontFamily: 'Milssky',
-                          color: Colors.white,
-                          fontSize: 80)),
-                  Text('mood',
-                      style: TextStyle(
-                          fontFamily: 'Milssky',
-                          color: Colors.white,
-                          fontSize: 80)),
-                ],
+            child: Transform(
+              origin: Offset(80, 100),
+              transform: Matrix4.rotationZ(turns),
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 400),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //  turns == 0 ? 0 : 50
+                    Text('Christmas ',
+                        style: TextStyle(
+                            fontFamily: 'Milssky',
+                            color: Colors.white,
+                            fontSize: 80)),
+                    Text('mood',
+                        style: TextStyle(
+                            fontFamily: 'Milssky',
+                            color: Colors.white,
+                            fontSize: 80)),
+                  ],
+                ),
               ),
             ),
           ),
