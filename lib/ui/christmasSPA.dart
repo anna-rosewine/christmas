@@ -1,5 +1,6 @@
 import 'package:christmasspa/core/models.dart';
 import 'package:christmasspa/ui/christmas_images.dart';
+import 'package:christmasspa/ui/mobile_layout.dart';
 import 'package:flutter/material.dart';
 
 class ChristmasSPA extends StatefulWidget {
@@ -16,7 +17,6 @@ class _ChristmasSPAState extends State<ChristmasSPA>
   late AnimationController _rotateController;
 
   rotateToVertical() {
-    print('vert');
     _rotateController.forward();
     setState(() {
       padding = MediaQuery.of(context).size.width * 0.2;
@@ -58,57 +58,67 @@ class _ChristmasSPAState extends State<ChristmasSPA>
     double itemWidth = (MediaQuery.of(context).size.width * 0.75) / 3;
     padding = MediaQuery.of(context).size.width * 0.4;
     return Scaffold(
-      backgroundColor: const Color(0xFF281C05),
-      body: Stack(
-        children: [
-          ChristmasImages(
-            padding: padding,
-            mouseIn: rotateToVertical,
-            mouseOut: rotateToHorizontal,
-          ),
-          AppTitle(
-            turns: rotation.value,
-          )
-        ],
-      ),
-    );
+        backgroundColor: const Color(0xFF281C05),
+        body: LayoutBuilder(builder: (context, constraints) {
+          return constraints.maxWidth >= 600
+              ? Stack(
+                  children: [
+                    ChristmasImages(
+                      padding: padding,
+                      isMobileView: false,
+                      mouseIn: rotateToVertical,
+                      mouseOut: rotateToHorizontal,
+                    ),
+                    AppTitle(
+                      turns: rotation.value,
+                      isMobileView: false,
+                    )
+                  ],
+                )
+              : MobileLayout();
+        }));
   }
 }
 
 class AppTitle extends StatelessWidget {
-  AppTitle({Key? key, required this.turns}) : super(key: key);
+  final bool isMobileView;
+  AppTitle({Key? key, required this.turns, required this.isMobileView})
+      : super(key: key);
 
   double turns;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
+      padding: EdgeInsets.only(left: 50, top: isMobileView == true ? 100 : 0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: isMobileView == true
+            ? MainAxisAlignment.start
+            : MainAxisAlignment.center,
         children: [
           Container(
             margin: const EdgeInsets.only(left: 30),
             child: Transform(
               origin: Offset(80, 100),
-              transform: Matrix4.rotationZ(turns),
+              transform: Matrix4.rotationZ(isMobileView == true ? turns : 0),
               child: AnimatedContainer(
                 duration: Duration(milliseconds: 400),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     //  turns == 0 ? 0 : 50
                     Text('Christmas ',
                         style: TextStyle(
                             fontFamily: 'Milssky',
                             color: Colors.white,
-                            fontSize: 80,
+                            fontSize: isMobileView == true ? 50 : 80,
                             overflow: TextOverflow.ellipsis)),
                     Text('mood',
                         style: TextStyle(
-                            fontFamily: 'Milssky',
-                            color: Colors.white,
-                            fontSize: 80)),
+                          fontFamily: 'Milssky',
+                          color: Colors.white,
+                          fontSize: isMobileView == true ? 50 : 80,
+                        )),
                   ],
                 ),
               ),
@@ -118,8 +128,9 @@ class AppTitle extends StatelessWidget {
             height: 50,
           ),
           Container(
-            width: 140,
-            child: Text('Створи різдвяний настрій за простим рецептом ',
+            width: isMobileView == true ? 300 : 140,
+            padding: EdgeInsets.only(left: isMobileView == true ? 160 : 0),
+            child: const Text('Створи різдвяний настрій за простим рецептом ',
                 style: TextStyle(color: Colors.white)),
           )
         ],

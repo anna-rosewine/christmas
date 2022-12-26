@@ -6,18 +6,21 @@ class ChristmasImages extends StatelessWidget {
   final Function mouseIn;
   final Function mouseOut;
   final double padding;
-  const ChristmasImages({
-    Key? key,
-    required this.padding,
-    required this.mouseIn,
-    required this.mouseOut,
-  }) : super(key: key);
+  final bool isMobileView;
+  const ChristmasImages(
+      {Key? key,
+      required this.padding,
+      required this.mouseIn,
+      required this.mouseOut,
+      required this.isMobileView})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double itemWidth = (MediaQuery.of(context).size.width * 0.6) / 3;
     return Container(
-        padding: EdgeInsets.only(left: padding),
+        padding:
+            EdgeInsets.only(left: padding, top: isMobileView == true ? 350 : 0),
         child: MouseRegion(
             onEnter: (e) {
               mouseIn();
@@ -25,27 +28,50 @@ class ChristmasImages extends StatelessWidget {
             onExit: (e) {
               mouseOut();
             },
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ...items.map(
-                  (item) => ImageItem(
-                    moodItem: item,
-                    width: itemWidth,
-                  ),
-                ),
-              ],
-            )));
+            child: isMobileView == true
+                ? _mobileView(context)
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ...items.map(
+                        (item) => ImageItem(
+                          isMobileView: false,
+                          moodItem: item,
+                          width: itemWidth,
+                        ),
+                      ),
+                    ],
+                  )));
+  }
+
+  Widget _mobileView(BuildContext context) {
+    print(MediaQuery.of(context).size.width);
+    return ListView(
+      children: [
+        ...items.map(
+          (item) => ImageItem(
+            isMobileView: true,
+            moodItem: item,
+            width: MediaQuery.of(context).size.width,
+          ),
+        ),
+      ],
+    );
   }
 }
 
 class ImageItem extends StatefulWidget {
-  ImageItem({Key? key, required this.width, required this.moodItem})
+  ImageItem(
+      {Key? key,
+      required this.width,
+      required this.moodItem,
+      required this.isMobileView})
       : super(key: key);
 
   double width;
   final MoodItem moodItem;
+  final bool isMobileView;
 
   @override
   State<ImageItem> createState() => _ImageItemState();
@@ -87,82 +113,101 @@ class _ImageItemState extends State<ImageItem>
     return AnimatedBuilder(
         animation: _controller,
         builder: (BuildContext context, _) {
-          return Flexible(
-              flex: _flexAnimation.value,
-              child: MouseRegion(
-                  onEnter: (_) {
+          return widget.isMobileView == true
+              ? InkWell(
+                  onTap: () {
                     _controller.forward();
                     setState(() {
                       isOpen = true;
                     });
                   },
-                  onExit: (_) {
-                    _controller.reverse();
-                    setState(() {
-                      isOpen = false;
-                    });
-                  },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 100),
-                    height: MediaQuery.of(context).size.height,
-                    // width: _widthAnimation.value,
-                    child: Stack(
-                      children: [
-                        ColorFiltered(
-                          colorFilter: ColorFilter.mode(
-                              _filterAnimation.value, BlendMode.modulate),
-                          child: Image.asset(
-                            widget.moodItem.assetPath,
-                            colorBlendMode: BlendMode.colorBurn,
-                            filterQuality: FilterQuality.high,
-                            // width: _widthAnimation.value,
-                            height: MediaQuery.of(context).size.height,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Opacity(
-                            opacity: _titleOpacityAnimation.value,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 70, horizontal: 30),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 1,
-                                    color: Colors.white,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.3,
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Text(
-                                    widget.moodItem.title,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        overflow: TextOverflow.ellipsis),
-                                  )
-                                ],
-                              ),
-                            )),
-                        Align(
-                            alignment: Alignment.bottomRight,
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 20),
-                              child: Opacity(
-                                opacity: 1.0 - _titleOpacityAnimation.value,
-                                child: CustomBtn(
-                                    link: widget.moodItem.link,
-                                    title: widget.moodItem.title),
-                              ),
-                            ))
-                      ],
-                    ),
-                  )));
+                  child: _imageBody())
+              : Flexible(
+                  flex: _flexAnimation.value,
+                  child: MouseRegion(
+                      onEnter: (_) {
+                        _controller.forward();
+                        setState(() {
+                          isOpen = true;
+                        });
+                      },
+                      onExit: (_) {
+                        _controller.reverse();
+                        setState(() {
+                          isOpen = false;
+                        });
+                      },
+                      child: _imageBody()));
         });
     // ),
+  }
+
+  Widget _imageBody() {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 100),
+      height: widget.isMobileView == true
+          ? 200
+          : MediaQuery.of(context).size.height,
+      // width: MediaQuery.of(context).size.width,
+      // width: _widthAnimation.value,
+      child: Stack(
+        children: [
+          ColorFiltered(
+            colorFilter:
+                ColorFilter.mode(_filterAnimation.value, BlendMode.modulate),
+            child: Image.asset(
+              widget.moodItem.assetPath,
+              colorBlendMode: BlendMode.colorBurn,
+              filterQuality: FilterQuality.high,
+              // width: _widthAnimation.value,
+              width: MediaQuery.of(context).size.width,
+              height: widget.isMobileView == true
+                  ? 200
+                  : MediaQuery.of(context).size.height,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Opacity(
+              opacity: _titleOpacityAnimation.value,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                    vertical: widget.isMobileView == true ? 20 : 70,
+                    horizontal: 30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 1,
+                      color: Colors.white,
+                      height: widget.isMobileView == true
+                          ? 60
+                          : MediaQuery.of(context).size.height * 0.3,
+                    ),
+                    SizedBox(
+                      height: widget.isMobileView == true ? 10 : 20,
+                    ),
+                    Text(
+                      widget.moodItem.title,
+                      style: TextStyle(
+                          color: Colors.white, overflow: TextOverflow.ellipsis),
+                    )
+                  ],
+                ),
+              )),
+          Align(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Opacity(
+                  opacity: 1.0 - _titleOpacityAnimation.value,
+                  child: CustomBtn(
+                      link: widget.moodItem.link, title: widget.moodItem.title),
+                ),
+              ))
+        ],
+      ),
+    );
   }
 }
