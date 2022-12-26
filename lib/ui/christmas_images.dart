@@ -16,7 +16,6 @@ class ChristmasImages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double itemWidth = (MediaQuery.of(context).size.width * 0.6) / 3;
-    print(padding);
     return Container(
         padding: EdgeInsets.only(left: padding),
         child: MouseRegion(

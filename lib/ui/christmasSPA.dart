@@ -96,13 +96,14 @@ class AppTitle extends StatelessWidget {
                 duration: Duration(milliseconds: 400),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     //  turns == 0 ? 0 : 50
                     Text('Christmas ',
                         style: TextStyle(
                             fontFamily: 'Milssky',
                             color: Colors.white,
-                            fontSize: 80)),
+                            fontSize: 80,
+                            overflow: TextOverflow.ellipsis)),
                     Text('mood',
                         style: TextStyle(
                             fontFamily: 'Milssky',
