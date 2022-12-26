@@ -3,41 +3,45 @@ import 'package:christmasspa/ui/customBtn.dart';
 import 'package:flutter/material.dart';
 
 class ChristmasImages extends StatelessWidget {
-  const ChristmasImages({Key? key}) : super(key: key);
+  final Function mouseIn;
+  final Function mouseOut;
+  const ChristmasImages(
+      {Key? key, required this.mouseIn, required this.mouseOut})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double itemWidth = (MediaQuery.of(context).size.width * 0.6) / 3;
-    print('here');
     return Container(
         padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ...items.map(
-              (item) => ImageItem(
-                title: item.title,
-                imageAsset: item.assetPath,
-                width: itemWidth,
-              ),
-            ),
-          ],
-        ));
+        child: MouseRegion(
+            onEnter: (e) {
+              mouseIn();
+            },
+            onExit: (e) {
+              mouseOut();
+            },
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ...items.map(
+                  (item) => ImageItem(
+                    moodItem: item,
+                    width: itemWidth,
+                  ),
+                ),
+              ],
+            )));
   }
 }
 
 class ImageItem extends StatefulWidget {
-  ImageItem(
-      {Key? key,
-      required this.width,
-      required this.imageAsset,
-      required this.title})
+  ImageItem({Key? key, required this.width, required this.moodItem})
       : super(key: key);
 
   double width;
-  final String imageAsset;
-  final String title;
+  final MoodItem moodItem;
 
   @override
   State<ImageItem> createState() => _ImageItemState();
@@ -104,7 +108,7 @@ class _ImageItemState extends State<ImageItem>
                           colorFilter: ColorFilter.mode(
                               _filterAnimation.value, BlendMode.modulate),
                           child: Image.asset(
-                            widget.imageAsset,
+                            widget.moodItem.assetPath,
                             colorBlendMode: BlendMode.colorBurn,
                             filterQuality: FilterQuality.high,
                             // width: _widthAnimation.value,
@@ -131,8 +135,10 @@ class _ImageItemState extends State<ImageItem>
                                     height: 20,
                                   ),
                                   Text(
-                                    widget.title,
-                                    style: TextStyle(color: Colors.white),
+                                    widget.moodItem.title,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        overflow: TextOverflow.ellipsis),
                                   )
                                 ],
                               ),
@@ -145,7 +151,8 @@ class _ImageItemState extends State<ImageItem>
                               child: Opacity(
                                 opacity: 1.0 - _titleOpacityAnimation.value,
                                 child: CustomBtn(
-                                    link: widget.title, title: widget.title),
+                                    link: widget.moodItem.link,
+                                    title: widget.moodItem.title),
                               ),
                             ))
                       ],

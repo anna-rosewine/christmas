@@ -14,17 +14,20 @@ class MoodItem {
 final List<MoodItem> items = [
   MoodItem(
       title: 'Свічки',
-      link: "",
+      link: "https://instagram.com/mrs.candles_ua?igshid=MWI4MTIyMDE=",
       assetPath: "assets/images/candles.png",
       btnText: 'Замовити'),
   MoodItem(
       title: 'Фільм',
-      link: "",
+      link:
+          "https://kinotron.top/4694-garri-potter-20-rokiv-po-tomu-povernenya-do-hogvortsu.html",
       assetPath: "assets/images/film.png",
       btnText: 'Дивитись'),
   MoodItem(
       title: 'Гірлянда',
-      link: "",
+      link: "https://instagram.com/girliandy?igshid=MWI4MTIyMDE=",
       assetPath: "assets/images/girl.png",
       btnText: 'Замовити'),
 ];
+
+enum MoodCartState { isOpen, isClosed }

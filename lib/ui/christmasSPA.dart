@@ -1,3 +1,4 @@
+import 'package:christmasspa/core/models.dart';
 import 'package:christmasspa/ui/christmas_images.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,9 @@ class ChristmasSPA extends StatefulWidget {
 }
 
 class _ChristmasSPAState extends State<ChristmasSPA> {
+  rotateToVertical() {}
+  rotateToHorizontal() {}
+
   @override
   Widget build(BuildContext context) {
     double itemWidth = (MediaQuery.of(context).size.width * 0.75) / 3;
@@ -16,7 +20,13 @@ class _ChristmasSPAState extends State<ChristmasSPA> {
     return Scaffold(
       backgroundColor: const Color(0xFF281C05),
       body: Stack(
-        children: [ChristmasImages(), AppTitle()],
+        children: [
+          ChristmasImages(
+            mouseIn: rotateToVertical,
+            mouseOut: rotateToHorizontal,
+          ),
+          AppTitle()
+        ],
       ),
     );
   }
