@@ -11,22 +11,23 @@ class ChristmasSPA extends StatefulWidget {
 
 class _ChristmasSPAState extends State<ChristmasSPA> {
   late double padding;
-  double turns = 0.0;
-
-  void _changeRotation() {
-    setState(() => turns += 1.0 / 8.0);
-  }
+  double rotation = 0.0;
 
   rotateToVertical() {
     print('vert');
 
-    _changeRotation();
     setState(() {
       padding = MediaQuery.of(context).size.width * 0.2;
+      rotation = -1.58;
     });
   }
 
-  rotateToHorizontal() {}
+  rotateToHorizontal() {
+    setState(() {
+      padding = MediaQuery.of(context).size.width * 0.2;
+      rotation = 0.0;
+    });
+  }
 
   @override
   initState() {
@@ -47,7 +48,7 @@ class _ChristmasSPAState extends State<ChristmasSPA> {
             mouseOut: rotateToHorizontal,
           ),
           AppTitle(
-            turns: turns,
+            turns: rotation,
           )
         ],
       ),
@@ -69,12 +70,13 @@ class AppTitle extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(left: 30),
-            child: AnimatedRotation(
-              turns: turns,
-              duration: const Duration(seconds: 1),
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 400),
+              // transform: Matrix4.rotationZ(turns),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
+                  //  turns == 0 ? 0 : 50
                   Text('Christmas ',
                       style: TextStyle(
                           fontFamily: 'Milssky',
@@ -89,7 +91,7 @@ class AppTitle extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 50,
           ),
           Container(
