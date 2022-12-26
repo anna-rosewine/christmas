@@ -60,10 +60,11 @@ class _ChristmasSPAState extends State<ChristmasSPA>
     return Scaffold(
         backgroundColor: const Color(0xFF281C05),
         body: LayoutBuilder(builder: (context, constraints) {
-          return constraints.maxWidth >= 600
+          return constraints.maxWidth >= 800
               ? Stack(
                   children: [
                     ChristmasImages(
+                      checkOpenItem: null,
                       padding: padding,
                       isMobileView: false,
                       mouseIn: rotateToVertical,

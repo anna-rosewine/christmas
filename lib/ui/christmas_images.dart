@@ -7,12 +7,14 @@ class ChristmasImages extends StatelessWidget {
   final Function mouseOut;
   final double padding;
   final bool isMobileView;
+  final Function? checkOpenItem;
   const ChristmasImages(
       {Key? key,
       required this.padding,
       required this.mouseIn,
       required this.mouseOut,
-      required this.isMobileView})
+      required this.isMobileView,
+      required this.checkOpenItem})
       : super(key: key);
 
   @override
@@ -36,6 +38,7 @@ class ChristmasImages extends StatelessWidget {
                     children: [
                       ...items.map(
                         (item) => ImageItem(
+                          checkOpenItem: null,
                           isMobileView: false,
                           moodItem: item,
                           width: itemWidth,
@@ -46,11 +49,11 @@ class ChristmasImages extends StatelessWidget {
   }
 
   Widget _mobileView(BuildContext context) {
-    print(MediaQuery.of(context).size.width);
     return ListView(
       children: [
         ...items.map(
           (item) => ImageItem(
+            checkOpenItem: checkOpenItem,
             isMobileView: true,
             moodItem: item,
             width: MediaQuery.of(context).size.width,
@@ -62,11 +65,14 @@ class ChristmasImages extends StatelessWidget {
 }
 
 class ImageItem extends StatefulWidget {
+  final Function? checkOpenItem;
+
   ImageItem(
       {Key? key,
       required this.width,
       required this.moodItem,
-      required this.isMobileView})
+      required this.isMobileView,
+      required this.checkOpenItem})
       : super(key: key);
 
   double width;
@@ -116,6 +122,9 @@ class _ImageItemState extends State<ImageItem>
           return widget.isMobileView == true
               ? InkWell(
                   onTap: () {
+                    widget.checkOpenItem != null
+                        ? widget.checkOpenItem!(widget.moodItem)
+                        : '';
                     _controller.forward();
                     setState(() {
                       isOpen = true;
@@ -159,7 +168,6 @@ class _ImageItemState extends State<ImageItem>
               widget.moodItem.assetPath,
               colorBlendMode: BlendMode.colorBurn,
               filterQuality: FilterQuality.high,
-              // width: _widthAnimation.value,
               width: MediaQuery.of(context).size.width,
               height: widget.isMobileView == true
                   ? 200
