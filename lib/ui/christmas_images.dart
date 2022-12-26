@@ -8,14 +8,14 @@ class ChristmasImages extends StatelessWidget {
   final double padding;
   final bool isMobileView;
   final Function? checkOpenItem;
-  const ChristmasImages(
-      {Key? key,
-      required this.padding,
-      required this.mouseIn,
-      required this.mouseOut,
-      required this.isMobileView,
-      required this.checkOpenItem})
-      : super(key: key);
+  const ChristmasImages({
+    Key? key,
+    required this.padding,
+    required this.mouseIn,
+    required this.mouseOut,
+    required this.isMobileView,
+    required this.checkOpenItem,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
