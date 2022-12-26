@@ -5,15 +5,20 @@ import 'package:flutter/material.dart';
 class ChristmasImages extends StatelessWidget {
   final Function mouseIn;
   final Function mouseOut;
-  const ChristmasImages(
-      {Key? key, required this.mouseIn, required this.mouseOut})
-      : super(key: key);
+  final double padding;
+  const ChristmasImages({
+    Key? key,
+    required this.padding,
+    required this.mouseIn,
+    required this.mouseOut,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double itemWidth = (MediaQuery.of(context).size.width * 0.6) / 3;
+    print(padding);
     return Container(
-        padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.4),
+        padding: EdgeInsets.only(left: padding),
         child: MouseRegion(
             onEnter: (e) {
               mouseIn();

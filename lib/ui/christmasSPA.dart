@@ -10,22 +10,45 @@ class ChristmasSPA extends StatefulWidget {
 }
 
 class _ChristmasSPAState extends State<ChristmasSPA> {
-  rotateToVertical() {}
+  late double padding;
+  double turns = 0.0;
+
+  void _changeRotation() {
+    setState(() => turns += 1.0 / 8.0);
+  }
+
+  rotateToVertical() {
+    print('vert');
+
+    _changeRotation();
+    setState(() {
+      padding = MediaQuery.of(context).size.width * 0.2;
+    });
+  }
+
   rotateToHorizontal() {}
+
+  @override
+  initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     double itemWidth = (MediaQuery.of(context).size.width * 0.75) / 3;
-
+    padding = MediaQuery.of(context).size.width * 0.4;
     return Scaffold(
       backgroundColor: const Color(0xFF281C05),
       body: Stack(
         children: [
           ChristmasImages(
+            padding: padding,
             mouseIn: rotateToVertical,
             mouseOut: rotateToHorizontal,
           ),
-          AppTitle()
+          AppTitle(
+            turns: turns,
+          )
         ],
       ),
     );
@@ -33,7 +56,9 @@ class _ChristmasSPAState extends State<ChristmasSPA> {
 }
 
 class AppTitle extends StatelessWidget {
-  const AppTitle({Key? key}) : super(key: key);
+  AppTitle({Key? key, required this.turns}) : super(key: key);
+
+  double turns;
 
   @override
   Widget build(BuildContext context) {
@@ -44,20 +69,24 @@ class AppTitle extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(left: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('Christmas ',
-                    style: TextStyle(
-                        fontFamily: 'Milssky',
-                        color: Colors.white,
-                        fontSize: 80)),
-                Text('mood',
-                    style: TextStyle(
-                        fontFamily: 'Milssky',
-                        color: Colors.white,
-                        fontSize: 80)),
-              ],
+            child: AnimatedRotation(
+              turns: turns,
+              duration: const Duration(seconds: 1),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text('Christmas ',
+                      style: TextStyle(
+                          fontFamily: 'Milssky',
+                          color: Colors.white,
+                          fontSize: 80)),
+                  Text('mood',
+                      style: TextStyle(
+                          fontFamily: 'Milssky',
+                          color: Colors.white,
+                          fontSize: 80)),
+                ],
+              ),
             ),
           ),
           SizedBox(
