@@ -16,11 +16,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    print('here');
     return MaterialApp(
       title: 'Christmas Mood',
       theme: ThemeData(
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           displaySmall: TextStyle(
             color: Colors.white,
           ),

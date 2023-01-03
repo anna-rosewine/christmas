@@ -9,8 +9,10 @@ class ChristmasImages extends StatelessWidget {
   final bool isMobileView;
   final Function? checkOpenItem;
   final MoodItem? openMpbileItem;
+  final double? topMobilePadding;
   const ChristmasImages({
     Key? key,
+    this.topMobilePadding,
     required this.padding,
     required this.mouseIn,
     required this.mouseOut,
@@ -22,9 +24,11 @@ class ChristmasImages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double itemWidth = (MediaQuery.of(context).size.width * 0.6) / 3;
+    print(topMobilePadding);
     return Container(
-        padding:
-            EdgeInsets.only(left: padding, top: isMobileView == true ? 350 : 0),
+        padding: EdgeInsets.only(
+            left: padding,
+            top: isMobileView == true ? (topMobilePadding ?? 350) : 0),
         child: MouseRegion(
             onEnter: (e) {
               mouseIn();
@@ -190,7 +194,7 @@ class _ImageItemState extends State<ImageItem>
               filterQuality: FilterQuality.high,
               width: MediaQuery.of(context).size.width,
               height: widget.isMobileView == true
-                  ? _flexAnimation.value * 200
+                  ? _flexAnimation.value * 400
                   : MediaQuery.of(context).size.height,
               fit: BoxFit.cover,
             ),
